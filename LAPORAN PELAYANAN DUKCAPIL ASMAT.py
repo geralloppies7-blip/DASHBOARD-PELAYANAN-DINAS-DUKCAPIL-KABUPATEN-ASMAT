@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Pelayanan Dukcapil Asmat - 10 Sept 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    line-height: 1.5;
+  }
+
+  /* KOP */
+  .kop {
+    background: white;
+    border-bottom: 4px double #1F4E78;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .kop .logo {
+    width: 70px; height: 70px;
+    background: linear-gradient(135deg, #1F4E78, #2E75B6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 24px; font-weight: bold;
+    flex-shrink: 0;
+  }
+  .kop .teks { flex: 1; text-align: center; }
+  .kop .teks h1 { font-size: 16px; color: #1F4E78; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kop .teks h2 { font-size: 20px; color: #1F4E78; text-transform: uppercase; font-weight: bold; margin: 3px 0; }
+  .kop .teks p { font-size: 11px; color: #666; font-style: italic; }
+
+  /* HEADER LAPORAN */
+  .header-laporan {
+    background: linear-gradient(135deg, #1F4E78, #2E75B6);
+    color: white;
+    padding: 30px 40px;
+    text-align: center;
+  }
+  .header-laporan h1 { font-size: 18px; margin-bottom: 8px; }
+  .header-laporan .info {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 10px; margin-top: 12px;
+  }
+  .header-laporan .badge {
+    background: rgba(255,255,255,0.2);
+    padding: 5px 15px; border-radius: 20px;
+    font-size: 12px;
+  }
+  .header-laporan .badge.kode {
+    background: #FFD966;
+    color: #1F4E78;
+    font-weight: bold;
+  }
+
+  /* CONTAINER */
+  .container { max-width: 1400px; margin: 0 auto; padding: 25px 20px; }
+
+  /* SECTION */
+  .section {
+    background: white;
+    border-radius: 10px;
+    padding: 22px 25px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .section h3 {
+    color: #1F4E78;
+    font-size: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    border-bottom: 3px solid #1F4E78;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* STAT CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+  }
+  .card {
+    padding: 15px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border-left: 5px solid #1F4E78;
+    position: relative;
+    transition: transform 0.15s;
+  }
+  .card:hover { transform: translateY(-2px); }
+  .card.blue { border-left-color: #2E75B6; background: #E7F0F9; }
+  .card.pink { border-left-color: #E91E63; background: #FCE4EC; }
+  .card.green { border-left-color: #4CAF50; background: #E8F5E9; }
+  .card.orange { border-left-color: #FF9800; background: #FFF3E0; }
+  .card.purple { border-left-color: #9C27B0; background: #F3E5F5; }
+  .card.red { border-left-color: #E53935; background: #FFEBEE; }
+  .card.teal { border-left-color: #009688; background: #E0F2F1; }
+  .card.gray { border-left-color: #9E9E9E; background: #F5F5F5; }
+  .card-label {
+    font-size: 10px; color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .card-value {
+    font-size: 24px; font-weight: bold;
+    color: #1F4E78;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .card-value.zero { color: #BDBDBD; }
+  .card-sub { font-size: 10px; color: #888; }
+
+  /* GRID 2 COL */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* CHART */
+  .chart-wrapper {
+    background: #fafbfc;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+  }
+  canvas { max-height: 350px; }
+
+  /* TABEL */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  thead { background: #1F4E78; color: white; }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  th { font-weight: 600; text-align: center; font-size: 11px; }
+  tbody tr:nth-child(even) { background: #f8f9fa; }
+  tbody tr:hover { background: #E7F0F9; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.center { text-align: center; }
+  td.zero { color: #BDBDBD; }
+  tfoot { background: #FFD966; font-weight: bold; }
+  tfoot td { border: 1px solid #999; }
+
+  /* STATUS BADGE */
+  .badge-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .badge-high { background: #4CAF50; color: white; }
+  .badge-medium { background: #FF9800; color: white; }
+  .badge-zero { background: #E0E0E0; color: #666; }
+
+  /* INFO BOX */
+  .info-box {
+    background: #E7F0F9;
+    border-left: 5px solid #2E75B6;
+    padding: 12px 18px;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 12px;
+    color: #333;
+  }
+  .info-box strong { color: #1F4E78; }
+
+  /* STOK BLANGKO */
+  .stok-box {
+    background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+    border-left: 5px solid #FF9800;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .stok-box .label {
+    font-size: 13px;
+    color: #E65100;
+    font-weight: 600;
+  }
+  .stok-box .nilai {
+    font-size: 28px;
+    font-weight: bold;
+    color: #E65100;
+  }
+  .stok-box .nilai small {
+    font-size: 12px;
+    color: #666;
+    font-weight: normal;
+  }
+
+  /* TTD */
+  .ttd {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 15px;
+  }
+  .ttd-box { text-align: center; width: 45%; }
+  .ttd-box p { font-size: 12px; margin-bottom: 60px; }
+  .ttd-box .nama {
+    font-weight: bold;
+    border-top: 1px solid #333;
+    padding-top: 5px;
+    display: inline-block;
+    min-width: 180px;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: #1F4E78;
+    color: white;
+    padding: 18px;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  @media print {
+    body { background: white; }
+    .section { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- KOP SURAT -->
+<div class="kop">
+  <div class="logo">AS</div>
+  <div class="teks">
+    <h1>Pemerintah Kabupaten Asmat</h1>
+    <h2>Dinas Kependudukan dan Pencatatan Sipil</h2>
+    <p>Jalan Yos Sudarso, Agats, Kabupaten Asmat, Papua Selatan</p>
+  </div>
+</div>
+
+<!-- HEADER LAPORAN -->
+<div class="header-laporan">
+  <h1>DASHBOARD LAPORAN PELAYANAN HARIAN</h1>
+  <p style="font-size: 12px; opacity: 0.9;">Dinas Kependudukan dan Pencatatan Sipil Kabupaten Asmat</p>
+  <div class="info">
+    <span class="badge">📅 Kamis, 10 September 2026</span>
+    <span class="badge kode">🔖 Kode: 9304</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION I: STATISTIK PELAYANAN -->
+  <div class="section">
+    <h3>📊 I. Ringkasan Pelayanan Hari Ini</h3>
+    <div class="cards">
+      <div class="card blue">
+        <div class="card-label">Perekaman KTP</div>
+        <div class="card-value">12</div>
+        <div class="card-sub">dokumen</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">Cetak KTP-el</div>
+        <div class="card-value">14</div>
+        <div class="card-sub">keping</div>
+      </div>
+      <div class="card blue">
+        <div class="card-label">PRR</div>
+        <div class="card-value">12</div>
+        <div class="card-sub">dokumen</div>
+      </div>
+      <div class="card teal">
+        <div class="card-label">Pindah Masuk</div>
+        <div class="card-value">2</div>
+        <div class="card-sub">dokumen</div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">Pindah Keluar</div>
+        <div class="card-value">2</div>
+        <div class="card-sub">dokumen</div>
+      </div>
+      <div class="card purple">
+        <div class="card-label">Akta Lahir</div>
+        <div class="card-value">10</div>
+        <div class="card-sub">dokumen</div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top: 18px;">
+      <strong>📌 Total Pelayanan Aktif:</strong> 50 dokumen dari 6 jenis layanan yang menghasilkan output hari ini.
+    </div>
+  </div>
+
+  <!-- SECTION II: STOK BLANGKO -->
+  <div class="section">
+    <h3>💳 II. Stok Blangko KTP-el</h3>
+    <div class="stok-box">
+      <div>
+        <div class="label">SISA BLANGKO KTP-el</div>
+        <div class="nilai">2.177 <small>keping</small></div>
+      </div>
+      <div style="text-align: right;">
+        <div class="label">STATUS</div>
+        <div style="font-size: 14px; color: #2E7D32; font-weight: bold;">✅ Tersedia</div>
+        <div style="font-size: 11px; color: #666; margin-top: 4px;">Estimasi cukup untuk ±155 hari kerja</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION III: LAYANAN DENGAN NILAI 0 -->
+  <div class="section">
+    <h3>⭕ III. Layanan Tanpa Aktivitas Hari Ini</h3>
+    <div class="cards">
+      <div class="card gray"><div class="card-label">SFE</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Suket</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Cetak KK</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">KIA</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">BAKAK</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Akta Kematian</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Akta Perkawinan</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Perceraian</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Pengesahan Anak</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Pengangkatan Anak</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">Pengakuan Anak</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">BPP</div><div class="card-value zero">0</div></div>
+      <div class="card gray"><div class="card-label">KTP Digital</div><div class="card-value zero">0</div></div>
+    </div>
+  </div>
+
+  <!-- SECTION IV: DATA KUMULATIF -->
+  <div class="section">
+    <h3>📈 IV. Data Kumulatif</h3>
+    <div class="cards">
+      <div class="card purple">
+        <div class="card-label">Jumlah KTP Digital</div>
+        <div class="card-value" id="totalKTPDigital">1.291</div>
+        <div class="card-sub">pengguna aktif</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">Total KIA</div>
+        <div class="card-value" id="totalKIA">15.000</div>
+        <div class="card-sub">kartu diterbitkan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION V: GRAFIK -->
+  <div class="section">
+    <h3>📊 V. Visualisasi Pelayanan</h3>
+    <div class="grid-2">
+      <div class="chart-wrapper">
+        <canvas id="chartPelayanan"></canvas>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="chartKumulatif"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION VI: TABEL LENGKAP -->
+  <div class="section">
+    <h3>📋 VI. Tabel Lengkap Laporan Pelayanan</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 50px;">No</th>
+          <th>Jenis Layanan</th>
+          <th style="width: 120px;">Jumlah</th>
+          <th style="width: 120px;">Satuan</th>
+          <th style="width: 140px;">Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" class="center">TOTAL PELAYANAN AKTIF</td>
+          <td class="num" id="totalAktif">-</td>
+          <td class="center">dokumen</td>
+          <td class="center">-</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- SECTION VII: CATATAN & TTD -->
+  <div class="section">
+    <h3>✍️ VII. Catatan & Pengesahan</h3>
+    <div class="info-box">
+      <strong>📝 Catatan:</strong> Laporan ini merupakan rekapitulasi pelayanan Dinas Dukcapil Kabupaten Asmat
+      pada hari Kamis, 10 September 2026 dengan kode pelayanan <strong>9304</strong>.
+      Stok blangko KTP-el dalam kondisi aman. Beberapa jenis layanan (Akta Kematian, Akta Perkawinan,
+      KIA, dsb.) tidak memiliki aktivitas hari ini.
+    </div>
+
+    <div class="ttd">
+      <div class="ttd-box">
+        <p>Mengetahui,<br>Kepala Dinas Dukcapil Asmat</p>
+        <div class="nama">(..............................)</div>
+      </div>
+      <div class="ttd-box">
+        <p>Agats, 10 September 2026<br>Petugas Pelayanan</p>
+        <div class="nama">(..............................)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>© 2026 Dinas Kependudukan dan Pencatatan Sipil Kabupaten Asmat</p>
+  <p>Laporan Pelayanan Kode 9304 | Kamis, 10 September 2026</p>
+</div>
+
+<script>
+// ============================================================
+// DATA PELAYANAN
+// ============================================================
+const dataPelayanan = [
+  { no:1,  jenis:"Perekaman KTP",    jumlah:12,   satuan:"dokumen" },
+  { no:2,  jenis:"Cetak KTP-el",     jumlah:14,   satuan:"keping" },
+  { no:3,  jenis:"PRR",              jumlah:12,   satuan:"dokumen" },
+  { no:4,  jenis:"SFE",              jumlah:0,    satuan:"dokumen" },
+  { no:5,  jenis:"Suket",            jumlah:0,    satuan:"dokumen" },
+  { no:6,  jenis:"Sisa Blangko KTP", jumlah:2177, satuan:"keping",  special:true },
+  { no:7,  jenis:"Cetak KK",         jumlah:0,    satuan:"dokumen" },
+  { no:8,  jenis:"KIA",              jumlah:0,    satuan:"dokumen" },
+  { no:9,  jenis:"Pindah Masuk",     jumlah:2,    satuan:"dokumen" },
+  { no:10, jenis:"Pindah Keluar",    jumlah:2,    satuan:"dokumen" },
+  { no:11, jenis:"Akta Lahir",       jumlah:10,   satuan:"dokumen" },
+  { no:12, jenis:"BAKAK",            jumlah:0,    satuan:"dokumen" },
+  { no:13, jenis:"Akta Kematian",    jumlah:0,    satuan:"dokumen" },
+  { no:14, jenis:"Akta Perkawinan",  jumlah:0,    satuan:"dokumen" },
+  { no:15, jenis:"Perceraian",       jumlah:0,    satuan:"dokumen" },
+  { no:16, jenis:"Pengesahan Anak",  jumlah:0,    satuan:"dokumen" },
+  { no:17, jenis:"Pengangkatan Anak",jumlah:0,    satuan:"dokumen" },
+  { no:18, jenis:"Pengakuan Anak",   jumlah:0,    satuan:"dokumen" },
+  { no:19, jenis:"BPP",              jumlah:0,    satuan:"dokumen" },
+  { no:20, jenis:"KTP Digital",      jumlah:0,    satuan:"dokumen" },
+  { no:21, jenis:"Jumlah KTP Digital",jumlah:1291, satuan:"pengguna", special:true },
+  { no:22, jenis:"Total KIA",        jumlah:15000, satuan:"kartu",   special:true }
+];
+
+// ============================================================
+// FORMAT ANGKA
+// ============================================================
+const fmt = n => new Intl.NumberFormat('id-ID').format(n);
+
+// ============================================================
+// RENDER TABEL
+// ============================================================
+function renderTabel() {
+  const tbody = document.getElementById('tbody');
+  let html = '';
+  let totalAktif = 0;
+
+  dataPelayanan.forEach(d => {
+    let statusClass, statusText;
+    if (d.special) {
+      statusClass = 'badge-high';
+      statusText = '📦 Data Kumulatif';
+    } else if (d.jumlah === 0) {
+      statusClass = 'badge-zero';
+      statusText = '— Tidak ada';
+    } else if (d.jumlah >= 10) {
+      statusClass = 'badge-high';
+      statusText = '✓ Aktif';
+      totalAktif += d.jumlah;
+    } else {
+      statusClass = 'badge-medium';
+      statusText = '● Rendah';
+      totalAktif += d.jumlah;
+    }
+
+    html += `<tr>
+      <td class="center">${d.no}</td>
+      <td>${d.jenis}</td>
+      <td class="num ${d.jumlah === 0 ? 'zero' : ''}">
+        <b>${fmt(d.jumlah)}</b>
+      </td>
+      <td class="center">${d.satuan}</td>
+      <td class="center"><span class="badge-status ${statusClass}">${statusText}</span></td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = html;
+  document.getElementById('totalAktif').textContent = fmt(totalAktif);
+}
+
+// ============================================================
+// GRAFIK PELAYANAN HARI INI (hanya yang > 0)
+// ============================================================
+function renderChartPelayanan() {
+  const aktif = dataPelayanan.filter(d => !d.special && d.jumlah > 0);
+
+  new Chart(document.getElementById('chartPelayanan'), {
+    type: 'bar',
+    data: {
+      labels: aktif.map(d => d.jenis),
+      datasets: [{
+        label: 'Jumlah',
+        data: aktif.map(d => d.jumlah),
+        backgroundColor: [
+          'rgba(46, 117, 182, 0.8)',
+          'rgba(76, 175, 80, 0.8)',
+          'rgba(46, 117, 182, 0.8)',
+          'rgba(0, 150, 136, 0.8)',
+          'rgba(255, 152, 0, 0.8)',
+          'rgba(156, 39, 176, 0.8)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Pelayanan Aktif Hari Ini',
+          color: '#1F4E78',
+          font: { size: 13 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.parsed.y} ${aktif[ctx.dataIndex].satuan}`
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 2 } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// GRAFIK DATA KUMULATIF
+// ============================================================
+function renderChartKumulatif() {
+  new Chart(document.getElementById('chartKumulatif'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Sisa Blangko KTP', 'Total KIA', 'KTP Digital'],
+      datasets: [{
+        data: [2177, 15000, 1291],
+        backgroundColor: [
+          'rgba(255, 152, 0, 0.8)',
+          'rgba(76, 175, 80, 0.8)',
+          'rgba(156, 39, 176, 0.8)'
+        ],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        title: {
+          display: true,
+          text: 'Data Kumulatif',
+          color: '#1F4E78',
+          font: { size: 13 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = (ctx.parsed / total * 100).toFixed(1);
+              return `${ctx.label}: ${fmt(ctx.parsed)} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderTabel();
+renderChartPelayanan();
+renderChartKumulatif();
+</script>
+
+</body>
+</html>
