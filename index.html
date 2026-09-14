@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Pelayanan Dukcapil Asmat - 11 Sept 2026</title>
+<title>Dashboard Pelayanan Dukcapil Asmat - Jumat, 11 September 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -249,13 +249,12 @@
 </head>
 <body>
 
-
 <!-- HEADER LAPORAN -->
 <div class="header-laporan">
   <h1>DASHBOARD LAPORAN PELAYANAN HARIAN</h1>
   <p style="font-size: 12px; opacity: 0.9;">Dinas Kependudukan dan Pencatatan Sipil Kabupaten Asmat</p>
   <div class="info">
-    <span class="badge">📅 Kamis, 11 September 2026</span>
+    <span class="badge">📅 Jumat, 11 September 2026</span>
     <span class="badge kode">🔖 Kode: 9304</span>
   </div>
 </div>
@@ -268,27 +267,32 @@
     <div class="cards">
       <div class="card blue">
         <div class="card-label">Perekaman KTP</div>
-        <div class="card-value">12</div>
+        <div class="card-value">3</div>
         <div class="card-sub">dokumen</div>
       </div>
       <div class="card green">
         <div class="card-label">Cetak KTP-el</div>
-        <div class="card-value">14</div>
+        <div class="card-value">25</div>
         <div class="card-sub">keping</div>
       </div>
       <div class="card blue">
         <div class="card-label">PRR</div>
-        <div class="card-value">12</div>
+        <div class="card-value">3</div>
         <div class="card-sub">dokumen</div>
       </div>
       <div class="card teal">
-        <div class="card-label">Pindah Masuk</div>
+        <div class="card-label">Cetak KK</div>
         <div class="card-value">2</div>
         <div class="card-sub">dokumen</div>
       </div>
       <div class="card orange">
+        <div class="card-label">Pindah Masuk</div>
+        <div class="card-value">1</div>
+        <div class="card-sub">dokumen</div>
+      </div>
+      <div class="card pink">
         <div class="card-label">Pindah Keluar</div>
-        <div class="card-value">2</div>
+        <div class="card-value">4</div>
         <div class="card-sub">dokumen</div>
       </div>
       <div class="card purple">
@@ -299,7 +303,7 @@
     </div>
 
     <div class="info-box" style="margin-top: 18px;">
-      <strong>📌 Total Pelayanan Aktif:</strong> 50 dokumen dari 6 jenis layanan yang menghasilkan output hari ini.
+      <strong>📌 Total Pelayanan Aktif:</strong> 48 dokumen dari 7 jenis layanan yang menghasilkan output hari ini.
     </div>
   </div>
 
@@ -309,12 +313,12 @@
     <div class="stok-box">
       <div>
         <div class="label">SISA BLANGKO KTP-el</div>
-        <div class="nilai">2.177 <small>keping</small></div>
+        <div class="nilai">2.152 <small>keping</small></div>
       </div>
       <div style="text-align: right;">
         <div class="label">STATUS</div>
         <div style="font-size: 14px; color: #2E7D32; font-weight: bold;">✅ Tersedia</div>
-        <div style="font-size: 11px; color: #666; margin-top: 4px;">Estimasi cukup untuk ±155 hari kerja</div>
+        <div style="font-size: 11px; color: #666; margin-top: 4px;">Estimasi cukup untuk ±86 hari kerja</div>
       </div>
     </div>
   </div>
@@ -325,7 +329,6 @@
     <div class="cards">
       <div class="card gray"><div class="card-label">SFE</div><div class="card-value zero">0</div></div>
       <div class="card gray"><div class="card-label">Suket</div><div class="card-value zero">0</div></div>
-      <div class="card gray"><div class="card-label">Cetak KK</div><div class="card-value zero">2</div></div>
       <div class="card gray"><div class="card-label">KIA</div><div class="card-value zero">0</div></div>
       <div class="card gray"><div class="card-label">BAKAK</div><div class="card-value zero">0</div></div>
       <div class="card gray"><div class="card-label">Akta Kematian</div><div class="card-value zero">0</div></div>
@@ -399,17 +402,18 @@
     <h3>✍️ VII. Catatan & Pengesahan</h3>
     <div class="info-box">
       <strong>📝 Catatan:</strong> Laporan ini merupakan rekapitulasi pelayanan Dinas Dukcapil Kabupaten Asmat
-      pada hari Kamis, 10 September 2026 dengan kode pelayanan <strong>9304</strong>.
+      pada hari Jumat, 11 September 2026 dengan kode pelayanan <strong>9304</strong>.
       Stok blangko KTP-el dalam kondisi aman. Beberapa jenis layanan (Akta Kematian, Akta Perkawinan,
       KIA, dsb.) tidak memiliki aktivitas hari ini.
     </div>
+  </div>
 
-
+</div>
 
 <!-- FOOTER -->
 <div class="footer">
   <p>© 2026 Dinas Kependudukan dan Pencatatan Sipil Kabupaten Asmat</p>
-  <p>Laporan Pelayanan Kode 9304 | Kamis, 10 September 2026</p>
+  <p>Laporan Pelayanan Kode 9304 | Jumat, 11 September 2026</p>
 </div>
 
 <script>
@@ -417,16 +421,16 @@
 // DATA PELAYANAN
 // ============================================================
 const dataPelayanan = [
-  { no:1,  jenis:"Perekaman KTP",    jumlah:12,   satuan:"dokumen" },
-  { no:2,  jenis:"Cetak KTP-el",     jumlah:14,   satuan:"keping" },
-  { no:3,  jenis:"PRR",              jumlah:12,   satuan:"dokumen" },
+  { no:1,  jenis:"Perekaman KTP",    jumlah:3,    satuan:"dokumen" },
+  { no:2,  jenis:"Cetak KTP-el",     jumlah:25,   satuan:"keping" },
+  { no:3,  jenis:"PRR",              jumlah:3,    satuan:"dokumen" },
   { no:4,  jenis:"SFE",              jumlah:0,    satuan:"dokumen" },
   { no:5,  jenis:"Suket",            jumlah:0,    satuan:"dokumen" },
-  { no:6,  jenis:"Sisa Blangko KTP", jumlah:2177, satuan:"keping",  special:true },
-  { no:7,  jenis:"Cetak KK",         jumlah:0,    satuan:"dokumen" },
+  { no:6,  jenis:"Sisa Blangko KTP", jumlah:2152, satuan:"keping",  special:true },
+  { no:7,  jenis:"Cetak KK",         jumlah:2,    satuan:"dokumen" },
   { no:8,  jenis:"KIA",              jumlah:0,    satuan:"dokumen" },
-  { no:9,  jenis:"Pindah Masuk",     jumlah:2,    satuan:"dokumen" },
-  { no:10, jenis:"Pindah Keluar",    jumlah:2,    satuan:"dokumen" },
+  { no:9,  jenis:"Pindah Masuk",     jumlah:1,    satuan:"dokumen" },
+  { no:10, jenis:"Pindah Keluar",    jumlah:4,    satuan:"dokumen" },
   { no:11, jenis:"Akta Lahir",       jumlah:10,   satuan:"dokumen" },
   { no:12, jenis:"BAKAK",            jumlah:0,    satuan:"dokumen" },
   { no:13, jenis:"Akta Kematian",    jumlah:0,    satuan:"dokumen" },
@@ -506,6 +510,7 @@ function renderChartPelayanan() {
           'rgba(46, 117, 182, 0.8)',
           'rgba(0, 150, 136, 0.8)',
           'rgba(255, 152, 0, 0.8)',
+          'rgba(233, 30, 99, 0.8)',
           'rgba(156, 39, 176, 0.8)'
         ],
         borderWidth: 1
@@ -543,7 +548,7 @@ function renderChartKumulatif() {
     data: {
       labels: ['Sisa Blangko KTP', 'Total KIA', 'KTP Digital'],
       datasets: [{
-        data: [2177, 15000, 1291],
+        data: [2152, 15000, 1291],
         backgroundColor: [
           'rgba(255, 152, 0, 0.8)',
           'rgba(76, 175, 80, 0.8)',
